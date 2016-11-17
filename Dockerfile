@@ -1,5 +1,5 @@
 FROM centos:centos7
-MAINTAINER Marcin Ryzycki marcin@m12.io, Przemyslaw Ozgo linux@ozgo.info
+MAINTAINER Oriol Boix Anfosso dev@orboan.com
 
 # - Install basic packages (e.g. python-setuptools is required to have python's easy_install)
 # - Install yum-utils so we have yum-config-manager tool available
@@ -14,7 +14,61 @@ RUN \
 
   easy_install supervisor
 
-# Add supervisord conf, bootstrap.sh files
+# - Updating system
+# - Install some basic web-related tools...
+RUN \ 
+yum update -y && \ 
+yum install -y wget patch tar bzip2 unzip openssh-clients MariaDB-client
+
+# - Install OpenSSH server
+RUN \
+  yum install -y openssh-server pwgen sudo vim mc links
+
+# - Generate keys for ssh. 
+# (This is usually done by systemd when sshd service is started)
+RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N '' \
+&& ssh-keygen -t dsa  -f /etc/ssh/ssh_host_dsa_key -N '' \
+&& ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N '' \
+&& chmod 600 /etc/ssh/*
+
+# - Configure SSH daemon...
+RUN \
+  sed -i -r 's/.?UseDNS\syes/UseDNS no/' /etc/ssh/sshd_config && \
+  sed -i -r 's/.?PasswordAuthentication.+/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
+  sed -i -r 's/.?ChallengeResponseAuthentication.+/ChallengeResponseAuthentication no/' /etc/ssh/sshd_config && \
+  sed -i -r 's/.?PermitRootLogin.+/PermitRootLogin no/' /etc/ssh/sshd_config
+
+# - Adding keyfiles configuration
+RUN \
+  sed -ri 's/^HostKey\ \/etc\/ssh\/ssh_host_ed25519_key/#HostKey\ \/etc\/ssh\/ssh_host_ed25519_key/g' /etc/ssh/sshd_config && \
+  sed -ri 's/^#HostKey\ \/etc\/ssh\/ssh_host_dsa_key/HostKey\ \/etc\/ssh\/ssh_host_dsa_key/g' /etc/ssh/sshd_config && \
+  sed -ri 's/^#HostKey\ \/etc\/ssh\/ssh_host_rsa_key/HostKey\ \/etc\/ssh\/ssh_host_rsa_key/g' /etc/ssh/sshd_config && \
+  sed -ri 's/^#HostKey\ \/etc\/ssh\/ssh_host_ecdsa_key/HostKey\ \/etc\/ssh\/ssh_host_ecdsa_key/g' /etc/ssh/sshd_config && \
+  sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+
+# Disable SSH strict host key checking: needed to access git via SSH in non-interactive mode
+RUN \
+  echo -e "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+
+# - Remove 'Defaults secure_path' from /etc/sudoers which overrides path when using 'sudo' command
+RUN \
+  sed -i '/secure_path/d' /etc/sudoers
+
+# - Remove warning about missing locale while logging in via ssh
+RUN \
+  echo > /etc/sysconfig/i18n
+
+# - Colorize ls
+RUN echo 'alias ls="ls --color"' >> ~/.bashrc \
+&& echo 'alias ll="ls -lh"' >> ~/.bashrc \
+&& echo 'alias la="ls -lha"' >> ~/.bashrc
+
+# - Clean YUM caches to minimise Docker image size...
+RUN \
+  yum clean all && rm -rf /tmp/yum*
+
+
+# - Add supervisord conf, bootstrap.sh files
 ADD container-files /
 
 VOLUME ["/data"]

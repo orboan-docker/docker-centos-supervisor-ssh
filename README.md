@@ -1,7 +1,13 @@
-# CentOS-7 with supervisord launcher | Docker
-[![Circle CI](https://circleci.com/gh/million12/docker-centos-supervisor.svg?style=svg)](https://circleci.com/gh/million12/docker-centos-supervisor)
+# CentOS-7 with supervisord launcher and SSH server | Docker
 
-This is a CentOS-7 Docker [million12/centos-supervisor](https://registry.hub.docker.com/u/million12/centos-supervisor/) image, perfect in case when you need to launch more then one process inside a container. This image is based on official [centos:centos7](https://registry.hub.docker.com/_/centos/) and it adds only ca. 20MB on top of it.
+This is a CentOS-7 Docker with supervisor and SSH server. It is inspired by [million12/centos-supervisor](https://registry.hub.docker.com/u/million12/centos-supervisor/). This image is perfect in case when you need to launch more then one process inside a container and want to access via SSH. This image is based on official [centos:centos7](https://registry.hub.docker.com/_/centos/).
+
+## SSH default login 
+#### Credentials using username and password:
+username: www
+password: iaw
+
+You can change them in container-files/config/init/create_user.sh
 
 ## What's included
 
@@ -44,33 +50,39 @@ Recommended structure:
 /data/www/ # your web application data
 ```
 
+####  SSH server
+##### Default login (username / password):
+username: www
+password: iaw
+You can change them in container-files/config/init/create_user.sh
+
 
 ## Usage
 
 As explained above, this container is configured to run your service(s) both in interactive and non-interactive modes.
   
-`docker run -it million12/centos-supervisor`: runs supervisord, then interactive bash shell and waits for user's input. Exiting from the shell kills the container.
+`docker run -it orboan/centos-supervisor-ssh`: runs supervisord, then interactive bash shell and waits for user's input. Exiting from the shell kills the container.
 
-`docker run -it million12/centos-supervisor ps aux`:  runs supervisord, then `ps aux` command inside container and exists.
+`docker run -it orboan/centos-supervisor-ssh ps aux`:  runs supervisord, then `ps aux` command inside container and exists.
 
-`docker run -it million12/centos-supervisor top`:  runs supervisord, then `top` tool. Exiting from top exits the container.
+`docker run -it orboan/centos-supervisor-ssh top`:  runs supervisord, then `top` tool. Exiting from top exits the container.
 
-`docker run -d million12/centos-supervisor`: detached, runs supervisord in foreground mode and its configured services
+`docker run -d orboan/centos-supervisor-ssh`: detached, runs supervisord in foreground mode and its configured services (ssh daemon and others you may add)
 
-`docker run -d million12/centos-supervisor touch 'test-file'`: detached, runs `touch 'test-file'` command, then supervisord in foreground mode and its configured services
+`docker run -d orboan/centos-supervisor touch 'test-file'`: detached, runs `touch 'test-file'` command, then supervisord in foreground mode and its configured services
 
 
 ## Build
 
-`docker build --tag=million12/centos-supervisor .`
+`docker build --tag=orboan/centos-supervisor-ssh .`
 
 
 ## Author
 
+Author: Oriol Boix Anfosso (<dev@orboan.com>)
+
+Work forked from [million12/centos-supervisor], so thanks to its authors:
+
 Author: Marcin Ryzycki (<marcin@m12.io>)  
 Author: Przemyslaw Ozgo (<linux@ozgo.info>)  
-This work is also inspired by [maxexcloo](https://github.com/maxexcloo)'s work on his [docker images](https://github.com/maxexcloo/Docker). Many thanks!
-
----
-
-**Sponsored by [Prototype Brewery](http://prototypebrewery.io/)** - the new prototyping tool for building highly-interactive prototypes of your website or web app. Built on top of [Neos CMS](https://www.neos.io/) and [Zurb Foundation](http://foundation.zurb.com/) framework.
+This work is also inspired by [maxexcloo](https://github.com/maxexcloo)'s work on his [docker images](https://github.com/maxexcloo/Docker). Many thanks.
