@@ -73,6 +73,6 @@ ADD container-files /
 
 VOLUME ["/data"]
 
-EXPOSE 22
+EXPOSE 22 9001
 
 ENTRYPOINT ["/config/bootstrap.sh"]
