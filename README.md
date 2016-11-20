@@ -1,10 +1,11 @@
 # CentOS-7 with supervisord launcher and SSH server | Docker
 
-This is a CentOS-7 Docker with supervisor and SSH server. It is inspired by [million12/centos-supervisor](https://registry.hub.docker.com/u/million12/centos-supervisor/). This image is perfect in case when you need to launch more then one process inside a container and want to access via SSH. This image is based on official [centos:centos7](https://registry.hub.docker.com/_/centos/).
+This is a CentOS-7 Docker with supervisor and SSH server. It is inspired by [million12/centos-supervisor](https://registry.hub.docker.com/u/million12/centos-supervisor/). This image is perfect in case when you need to launch more then one process inside a container and want access via SSH. This image is based on official [centos:centos7](https://registry.hub.docker.com/_/centos/).
 
 ## SSH default login 
 #### Credentials using username and password:
 username: www
+
 password: iaw
 
 You can change them in container-files/config/init/create_user.sh
@@ -53,7 +54,9 @@ Recommended structure:
 ####  SSH server
 ##### Default login (username / password):
 username: www
+
 password: iaw
+
 You can change them in container-files/config/init/create_user.sh
 
 
