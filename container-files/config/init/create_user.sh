@@ -1,11 +1,17 @@
 #!/bin/bash
+user=www
+# Creating the www user only if it does not exist
+ret=false
+getent passwd $user >/dev/null 2>&1 && ret=true
 
-# Creating the www user
-useradd www -d /data/www
+if $ret; then
+echo "user already exists";
+else
+
+useradd $user -d /data/$user
 # Setting password for the www user
-echo 'www:iaw' | chpasswd
+echo "${user}:iaw" | chpasswd
 # Add 'www' user to sudoers
-echo 'www  ALL=(ALL)  NOPASSWD: ALL' > /etc/sudoers.d/www
-
-
-
+echo "${user}  ALL=(ALL)  NOPASSWD: ALL" > /etc/sudoers.d/$user
+echo "user created"
+fi
