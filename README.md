@@ -10,6 +10,16 @@ password: iaw
 
 You can change them in container-files/config/init/create_user.sh
 
+## Supervisor management via web interface
+
+Web server is listening in port 9001, thus you may create a new container by running the image adding the option
+-p xxxx:9001 to 'docker run'
+
+#### Credentials also are:
+username: www
+
+password: iaw
+
 ## What's included
 
 ##### - bootstrap.sh script
