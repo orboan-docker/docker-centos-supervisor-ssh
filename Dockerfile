@@ -1,4 +1,4 @@
-FROM centos:centos7
+FROM centos:7.3.1611
 MAINTAINER Oriol Boix Anfosso dev@orboan.com
 
 # - Install basic packages (e.g. python-setuptools is required to have python's easy_install)
