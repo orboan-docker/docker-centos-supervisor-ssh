@@ -67,6 +67,8 @@ RUN echo 'alias ls="ls --color"' >> ~/.bashrc \
 RUN \
   yum clean all && rm -rf /tmp/yum*
 
+ENV USER=www
+ENV PASSWORD=iaw
 
 # - Add supervisord conf, bootstrap.sh files
 ADD container-files /

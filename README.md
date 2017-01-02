@@ -8,14 +8,16 @@ username: www
 
 password: iaw
 
-You can change them in container-files/config/init/create_user.sh
+You can change them using USER and PASSWORD environment variables. Example:
+
+#### docker run -d -p 2222:22 -p 9001:9001 -e USER=myusername -e PASSWORD=mypassword orboan/docker-centos-supervisor-ssh
 
 ## Supervisor management via web interface
 
 Web server is listening in port 9001, thus you may create a new container by running the image adding the option
--p xxxx:9001 to 'docker run'
+-p xxxx:9001 to 'docker run' (see example above)
 
-#### Credentials also are:
+#### Default credentials also are:
 username: www
 
 password: iaw
