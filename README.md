@@ -69,8 +69,7 @@ username: www
 
 password: iaw
 
-You can change them in container-files/config/init/create_user.sh
-
+You can change them using USER and PASSWORD environment variables.
 
 ## Usage
 
