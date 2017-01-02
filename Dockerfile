@@ -73,6 +73,10 @@ ENV PASSWORD=iaw
 # - Add supervisord conf, bootstrap.sh files
 ADD container-files /
 
+RUN \
+   sed -ri "s/www/${USER}/g" /etc/supervisord.conf && \
+   sed -ri "s/iaw/${PASSWORD}/g" /etc/supervisord.conf
+
 VOLUME ["/data"]
 
 EXPOSE 22 9001
